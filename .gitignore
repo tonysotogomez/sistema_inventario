@@ -1,0 +1,7 @@
+bin/
+obj/
+.vs/
+.vscode/
+
+# Data JSON
+# data/*.json

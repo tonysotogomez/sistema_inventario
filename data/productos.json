@@ -1,0 +1,23 @@
+[
+  {
+    "Codigo": "12346",
+    "Nombre": "Atun en agua",
+    "Cantidad": 3,
+    "Precio": 4.50,
+    "Total": 13.50
+  },
+  {
+    "Codigo": "12343",
+    "Nombre": "Bebida de almendras",
+    "Cantidad": 2,
+    "Precio": 9.50,
+    "Total": 19.00
+  },
+  {
+    "Codigo": "12347",
+    "Nombre": "Leche Gloria Slim",
+    "Cantidad": 4,
+    "Precio": 6.5,
+    "Total": 26.0
+  }
+]
