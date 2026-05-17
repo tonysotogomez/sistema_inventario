@@ -6,7 +6,7 @@ namespace SistemaDeInventario.Services
     public class InventarioService
     {
         private readonly List<Producto> productos;
-        private const string ARCHIVO = "data/productos.json";
+        private const string ARCHIVO = "productos.json";
 
         public InventarioService()
         {

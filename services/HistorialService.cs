@@ -6,7 +6,7 @@ namespace SistemaDeInventario.Services
     public class HistorialService
     {
         private readonly List<Movimiento> historial;
-        private const string ARCHIVO = "data/historial.json";
+        private const string ARCHIVO = "historial.json";
 
         public HistorialService()
         {

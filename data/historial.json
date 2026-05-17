@@ -70,5 +70,14 @@
     "CantidadAnterior": 0,
     "CantidadNueva": 2,
     "Descripcion": "Producto registrado."
+  },
+  {
+    "Fecha": "2026-05-17T12:49:09.7359773-05:00",
+    "Tipo": "REGISTRO",
+    "CodigoProducto": "123",
+    "NombreProducto": "producto 1",
+    "CantidadAnterior": 0,
+    "CantidadNueva": 3,
+    "Descripcion": "Producto registrado."
   }
 ]

@@ -6,7 +6,7 @@ namespace SistemaDeInventario.Services
     public class VentaService
     {
         private readonly List<Venta> ventas;
-        private const string ARCHIVO = "data/ventas.json";
+        private const string ARCHIVO = "ventas.json";
         public VentaService()
         {
             ventas = JsonDataManager.Cargar<List<Venta>>(ARCHIVO) ?? new List<Venta>();
