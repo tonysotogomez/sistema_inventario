@@ -54,3 +54,28 @@ Contiene toda la interacción con consola:
 - Menús
 - Lectura de datos
 - Mensajes al usuario
+
+# Cómo ejecutar el proyecto
+
+## Requisitos
+
+- .NET SDK instalado
+
+Verificar instalación:
+
+```bash
+dotnet --version
+```
+
+## Ejecutar
+
+Desde la raíz del proyecto:
+```
+dotnet run
+```
+## Instalación de dependencias
+
+Instalar Newtonsoft.Json:
+```
+dotnet add package Newtonsoft.Json
+```
