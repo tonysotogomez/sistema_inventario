@@ -24,7 +24,7 @@ namespace SistemaDeInventario.UI
             {
                 Console.Clear();
 
-                Console.WriteLine("===== SISTEMA DE INVENTARIO =====");
+                Console.WriteLine("---- SISTEMA DE INVENTARIO ----");
                 Console.WriteLine("1. Registrar producto");
                 Console.WriteLine("2. Agregar stock");
                 Console.WriteLine("3. Registrar venta");
@@ -36,7 +36,6 @@ namespace SistemaDeInventario.UI
                 Console.WriteLine("9. Mostrar historial");
                 Console.WriteLine("10. Ordenar productos");
                 Console.WriteLine("11. Salir");
-                //Ya no se muestra la opcion de Guardar Datos porque ahora se guardan automáticamente después de cada operación.
 
                 Console.Write("\nSeleccione una opción: ");
 
@@ -84,7 +83,13 @@ namespace SistemaDeInventario.UI
                         OrdenarProductos();
                         break;
 
-                    default: Console.WriteLine("Seleccione una opción válida");break;
+                    case 11:
+                        Console.WriteLine("Saliendo del sistema...");
+                        break;
+
+                    default:
+                        Console.WriteLine("Seleccione una opción válida");
+                        break;
                 }
 
                 if (opcion != 11)
