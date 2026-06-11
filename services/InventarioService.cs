@@ -7,10 +7,12 @@ namespace SistemaDeInventario.Services
     {
         private readonly List<Producto> productos;
         private const string ARCHIVO = "productos.json";
+        private readonly VentaService ventaService;
 
         public InventarioService()
         {
             productos = JsonDataManager.Cargar<List<Producto>>(ARCHIVO) ?? new List<Producto>();
+            ventaService = new VentaService();
         }
 
         public void RegistrarProducto(Producto producto)
@@ -29,8 +31,32 @@ namespace SistemaDeInventario.Services
         public Producto BuscarProducto(string codigo)
         {
             return productos.FirstOrDefault(
-                p => p.Codigo.ToLower() == codigo.ToLower()
+                p => p.Codigo.Equals(codigo, StringComparison.OrdinalIgnoreCase)
             );
+        }
+
+        public List<Producto> BuscarProductos(string textoBusqueda)
+        {
+            if (string.IsNullOrWhiteSpace(textoBusqueda))
+            {
+                return new List<Producto>();
+            }
+
+            textoBusqueda = textoBusqueda.Trim();
+
+            Producto productoPorCodigo = productos.FirstOrDefault(
+                p => p.Codigo.Equals(textoBusqueda, StringComparison.OrdinalIgnoreCase)
+            );
+
+            if (productoPorCodigo != null)
+            {
+                return new List<Producto> { productoPorCodigo };
+            }
+
+            return productos
+                .Where(p => p.Nombre.Contains(textoBusqueda, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(p => p.Nombre)
+                .ToList();
         }
 
         public List<Producto> ObtenerProductos()
@@ -103,10 +129,46 @@ namespace SistemaDeInventario.Services
             Guardar();
         }
 
-        public void OrdenarProductos()
+        public List<ProductoDemanda> ObtenerProductosConMayorDemanda()
         {
-            productos.Sort((a, b) => a.Nombre.CompareTo(b.Nombre));
-            Guardar();
+            List<Venta> ventas = ventaService.ObtenerVentas();
+            return ventas
+                .GroupBy(v => v.CodigoProducto)
+                .Select(grupo =>
+                {
+                    Producto producto = productos.FirstOrDefault(
+                        p => p.Codigo.Equals(
+                            grupo.Key,
+                            StringComparison.OrdinalIgnoreCase
+                        )
+                    );
+
+                    return new ProductoDemanda
+                    {
+                        Codigo = grupo.Key,
+                        Nombre = producto != null ? producto.Nombre : "Producto no encontrado",
+                        CantidadTotalVendida = grupo.Sum(v => v.CantidadVendida)
+                    };
+                })
+                .OrderByDescending(p => p.CantidadTotalVendida)
+                .ToList();
+        }
+
+        public List<Producto> ObtenerProductosConBajoStock()
+        {
+            return productos
+                .Where(p => p.Cantidad >= 1 && p.Cantidad <= 5)
+                .OrderBy(p => p.Cantidad)
+                .ThenBy(p => p.Nombre)
+                .ToList();
+        }
+
+        public List<Producto> ObtenerProductosSinStock()
+        {
+            return productos
+                .Where(p => p.Cantidad == 0)
+                .OrderBy(p => p.Nombre)
+                .ToList();
         }
 
         private void Guardar()

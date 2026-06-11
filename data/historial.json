@@ -3,7 +3,7 @@
     "Fecha": "2026-05-15T16:30:56.039196-05:00",
     "Tipo": "REGISTRO",
     "CodigoProducto": "12345",
-    "NombreProducto": "Yogurt Laive",
+    "NombreProducto": "Regla Artesco 50 Cm Cristal",
     "CantidadAnterior": 0,
     "CantidadNueva": 2,
     "Descripcion": "Producto registrado."
@@ -12,7 +12,7 @@
     "Fecha": "2026-05-15T16:31:38.3201685-05:00",
     "Tipo": "ENTRADA",
     "CodigoProducto": "12345",
-    "NombreProducto": "Yogurt Laive",
+    "NombreProducto": "Regla Artesco 50 Cm Cristal",
     "CantidadAnterior": 2,
     "CantidadNueva": 5,
     "Descripcion": "Stock agregado."
@@ -21,7 +21,7 @@
     "Fecha": "2026-05-15T16:47:41.7097244-05:00",
     "Tipo": "SALIDA",
     "CodigoProducto": "12345",
-    "NombreProducto": "Yogurt Laive",
+    "NombreProducto": "Regla Artesco 50 Cm Cristal",
     "CantidadAnterior": 5,
     "CantidadNueva": 4,
     "Descripcion": "Venta realizada."
@@ -30,7 +30,7 @@
     "Fecha": "2026-05-15T18:35:41.6786871-05:00",
     "Tipo": "MODIFICACION",
     "CodigoProducto": "12345",
-    "NombreProducto": "Yogurt Gloria Slim",
+    "NombreProducto": "Regla Artesco Transparente 30 Cm",
     "CantidadAnterior": 4,
     "CantidadNueva": 4,
     "Descripcion": "Producto modificado."
@@ -39,7 +39,7 @@
     "Fecha": "2026-05-15T18:35:53.1960113-05:00",
     "Tipo": "ELIMINACION",
     "CodigoProducto": "12345",
-    "NombreProducto": "Yogurt Gloria Slim",
+    "NombreProducto": "Regla Artesco Transparente 30 Cm",
     "CantidadAnterior": 4,
     "CantidadNueva": 0,
     "Descripcion": "Producto eliminado."
@@ -48,7 +48,7 @@
     "Fecha": "2026-05-15T18:36:59.0047321-05:00",
     "Tipo": "REGISTRO",
     "CodigoProducto": "12346",
-    "NombreProducto": "Atun en agua",
+    "NombreProducto": "Escalímetro Ove",
     "CantidadAnterior": 0,
     "CantidadNueva": 3,
     "Descripcion": "Producto registrado."
@@ -57,7 +57,7 @@
     "Fecha": "2026-05-15T18:37:40.4184587-05:00",
     "Tipo": "REGISTRO",
     "CodigoProducto": "12347",
-    "NombreProducto": "Leche Gloria Slim",
+    "NombreProducto": "Transportador Artesco 180° X 10 Cm",
     "CantidadAnterior": 0,
     "CantidadNueva": 4,
     "Descripcion": "Producto registrado."
@@ -66,7 +66,7 @@
     "Fecha": "2026-05-15T18:38:10.0439465-05:00",
     "Tipo": "REGISTRO",
     "CodigoProducto": "12343",
-    "NombreProducto": "Bebida de almendras",
+    "NombreProducto": "Lápices Artesco Grafito 2B",
     "CantidadAnterior": 0,
     "CantidadNueva": 2,
     "Descripcion": "Producto registrado."
@@ -75,7 +75,7 @@
     "Fecha": "2026-05-17T12:49:09.7359773-05:00",
     "Tipo": "REGISTRO",
     "CodigoProducto": "123",
-    "NombreProducto": "producto 1",
+    "NombreProducto": "Plumones Layconsa School 45 Empaque 12 Und",
     "CantidadAnterior": 0,
     "CantidadNueva": 3,
     "Descripcion": "Producto registrado."

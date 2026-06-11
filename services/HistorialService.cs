@@ -40,6 +40,33 @@ namespace SistemaDeInventario.Services
             return historial;
         }
 
+        public List<Movimiento> ObtenerHistorialPorFecha(DateTime fecha)
+        {
+            return historial
+                .Where(m => m.Fecha.Date == fecha.Date)
+                .OrderByDescending(m => m.Fecha)
+                .ToList();
+        }
+
+        public List<Movimiento> ObtenerHistorialPorProducto(string textoBusqueda)
+        {
+            if (string.IsNullOrWhiteSpace(textoBusqueda))
+            {
+                return new List<Movimiento>();
+            }
+
+            textoBusqueda = textoBusqueda.Trim();
+
+            return historial
+                .Where(m =>
+                    m.CodigoProducto.Equals(textoBusqueda, StringComparison.OrdinalIgnoreCase)
+                    ||
+                    m.NombreProducto.Contains(textoBusqueda, StringComparison.OrdinalIgnoreCase)
+                )
+                .OrderByDescending(m => m.Fecha)
+                .ToList();
+        }
+
         private void Guardar()
         {
             JsonDataManager.Guardar(ARCHIVO, historial);

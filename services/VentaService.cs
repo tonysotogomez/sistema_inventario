@@ -46,6 +46,63 @@ namespace SistemaDeInventario.Services
                 .ToList();
         }
 
+        public List<Venta> ObtenerVentasPorFecha(DateTime fecha)
+        {
+            return ventas
+                .Where(v => v.Fecha.Date == fecha.Date)
+                .ToList();
+        }
+
+        public List<Venta> ObtenerVentasPorProducto(string textoBusqueda)
+        {
+            if (string.IsNullOrWhiteSpace(textoBusqueda))
+            {
+                return new List<Venta>();
+            }
+
+            textoBusqueda = textoBusqueda.Trim();
+
+            return ventas
+                .Where(v =>
+                    v.CodigoProducto.Equals(textoBusqueda, StringComparison.OrdinalIgnoreCase)
+                    ||
+                    v.NombreProducto.Contains(textoBusqueda, StringComparison.OrdinalIgnoreCase)
+                )
+                .OrderByDescending(v => v.Fecha)
+                .ToList();
+        }
+
+        public List<Venta> ObtenerUltimas5VentasPorProducto(string codigoProducto)
+        {
+            return ventas
+                .Where(v => v.CodigoProducto.Equals(codigoProducto, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(v => v.Fecha)
+                .Take(5)
+                .ToList();
+        }
+
+        public List<Venta> ObtenerVentasPorProductoYFecha(string textoBusqueda, DateTime fecha)
+        {
+            if (string.IsNullOrWhiteSpace(textoBusqueda))
+            {
+                return new List<Venta>();
+            }
+
+            textoBusqueda = textoBusqueda.Trim();
+
+            return ventas
+                .Where(v =>
+                    (
+                        v.CodigoProducto.Equals(textoBusqueda, StringComparison.OrdinalIgnoreCase)
+                        ||
+                        v.NombreProducto.Contains(textoBusqueda, StringComparison.OrdinalIgnoreCase)
+                    )
+                    && v.Fecha.Date == fecha.Date
+                )
+                .OrderByDescending(v => v.Fecha)
+                .ToList();
+        }
+
         private void Guardar()
         {
             JsonDataManager.Guardar(ARCHIVO, ventas);
