@@ -17,18 +17,35 @@ namespace SistemaDeInventario.Services
 
         public void RegistrarProducto(Producto producto)
         {
-            bool existe = productos.Any(p => p.Codigo == producto.Codigo);
-
-            if (existe)
+            if (productos.Any(p =>
+                p.Codigo.Equals(producto.Codigo, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new Exception("Ese código ya existe.");
+            }
+
+            if (productos.Any(p =>
+                p.Nombre.Equals(producto.Nombre, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new Exception("Ese nombre de producto ya existe.");
             }
 
             productos.Add(producto);
             Guardar();
         }
 
-        public Producto BuscarProducto(string codigo)
+        public bool ExisteCodigo(string codigo)
+        {
+            return productos.Any(p =>
+                p.Codigo.Equals(codigo, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public bool ExisteNombre(string nombre)
+        {
+            return productos.Any(p =>
+                p.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public Producto? BuscarProducto(string codigo)
         {
             return productos.FirstOrDefault(
                 p => p.Codigo.Equals(codigo, StringComparison.OrdinalIgnoreCase)
@@ -44,7 +61,7 @@ namespace SistemaDeInventario.Services
 
             textoBusqueda = textoBusqueda.Trim();
 
-            Producto productoPorCodigo = productos.FirstOrDefault(
+            Producto? productoPorCodigo = productos.FirstOrDefault(
                 p => p.Codigo.Equals(textoBusqueda, StringComparison.OrdinalIgnoreCase)
             );
 

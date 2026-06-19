@@ -89,24 +89,73 @@ namespace SistemaDeInventario.UI
 
             } while (opcion != 7);
         }
-
         //funciones producto
 
         private void RegistrarProducto()
         {
             try
             {
-                Console.Write("Código: ");
-                string codigo = Console.ReadLine();
+                string codigo;
 
-                Console.Write("Nombre: ");
-                string nombre = Console.ReadLine();
+                do
+                {
+                    codigo =
+                        InputHelper.LeerTexto("Código: ");
 
-                Console.Write("Cantidad: ");
-                int cantidad = int.Parse(Console.ReadLine());
+                    if (inventarioService.ExisteCodigo(codigo))
+                    {
+                        Console.WriteLine("Ese código ya existe.");
+                        codigo = "";
+                    }
 
-                Console.Write("Precio: ");
-                decimal precio = decimal.Parse(Console.ReadLine());
+                } while (string.IsNullOrWhiteSpace(codigo));
+
+                string nombre;
+
+                do
+                {
+                    nombre =
+                        InputHelper.LeerTexto("Nombre: ");
+
+                    if (inventarioService.ExisteNombre(nombre))
+                    {
+                        Console.WriteLine("Ese nombre de producto ya existe.");
+                        nombre = "";
+                    }
+
+                } while (string.IsNullOrWhiteSpace(nombre));
+
+                int cantidad;
+
+                do
+                {
+                    cantidad =
+                        InputHelper.LeerEntero("Cantidad: ");
+
+                    if (cantidad <= 0)
+                    {
+                        Console.WriteLine(
+                            "La cantidad inicial del producto debe ser mayor que cero."
+                        );
+                    }
+
+                } while (cantidad <= 0);
+
+                decimal precio;
+
+                do
+                {
+                    precio =
+                        InputHelper.LeerDecimal("Precio: ");
+
+                    if (precio <= 0)
+                    {
+                        Console.WriteLine(
+                            "El precio del producto debe ser mayor que cero."
+                        );
+                    }
+
+                } while (precio <= 0);
 
                 Producto producto = new Producto
                 {
@@ -133,39 +182,51 @@ namespace SistemaDeInventario.UI
                 Console.WriteLine(ex.Message);
             }
         }
-
         private void AgregarStock()
         {
             try
             {
-                Console.Write("Código: ");
-                string codigo = Console.ReadLine();
-
-                Producto producto =
-                    inventarioService.BuscarProducto(codigo);
+                Producto? producto =
+                    BuscarProducto();
 
                 if (producto == null)
                 {
-                    Console.WriteLine("Producto no encontrado.");
                     return;
                 }
 
-                int cantidadAnterior = producto.Cantidad;
+                int cantidad =
+                    InputHelper.LeerEntero(
+                        "Cantidad a agregar: ");
 
-                Console.Write("Cantidad a agregar: ");
-                int cantidad = int.Parse(Console.ReadLine());
+                if (cantidad <= 0)
+                {
+                    Console.WriteLine(
+                        "La cantidad debe ser mayor que cero."
+                    );
 
-                inventarioService.AgregarStock(codigo, cantidad);
+                    return;
+                }
 
-                historialService.RegistrarMovimiento(
-                    "ENTRADA",
-                    producto,
-                    cantidadAnterior,
-                    producto.Cantidad,
-                    "Stock agregado."
+                int cantidadAnterior =
+                    producto.Cantidad;
+
+                inventarioService.AgregarStock(
+                    producto.Codigo,
+                    cantidad
                 );
 
-                Console.WriteLine("Stock actualizado.");
+                historialService
+                    .RegistrarMovimiento(
+                        "ENTRADA",
+                        producto,
+                        cantidadAnterior,
+                        producto.Cantidad,
+                        "Stock agregado."
+                    );
+
+                Console.WriteLine(
+                    "Stock actualizado."
+                );
             }
             catch (Exception ex)
             {
@@ -177,77 +238,87 @@ namespace SistemaDeInventario.UI
         {
             try
             {
-                Console.Write("Código: ");
-                string codigo = Console.ReadLine();
-
-                Producto producto =
-                    inventarioService.BuscarProducto(codigo);
+                Producto? producto = BuscarProducto();
 
                 if (producto == null)
                 {
-                    Console.WriteLine("Producto no encontrado.");
                     return;
                 }
 
+                Console.WriteLine();
                 Console.WriteLine("1. Modificar nombre");
                 Console.WriteLine("2. Modificar cantidad");
                 Console.WriteLine("3. Modificar precio");
 
-                Console.Write("Seleccione: ");
-
-                int opcion = int.Parse(Console.ReadLine());
+                int opcion =
+                    InputHelper.LeerEntero(
+                        "Seleccione: ");
 
                 switch (opcion)
                 {
                     case 1:
 
-                        Console.Write("Nuevo nombre: ");
+                        string nombre =
+                            InputHelper.LeerTexto(
+                                "Nuevo nombre: ");
 
-                        string nombre = Console.ReadLine();
-
-                        inventarioService.ModificarNombre(
-                            codigo,
-                            nombre
-                        );
+                        inventarioService
+                            .ModificarNombre(
+                                producto.Codigo,
+                                nombre
+                            );
 
                         break;
 
                     case 2:
 
-                        Console.Write("Nueva cantidad: ");
+                        int cantidad =
+                            InputHelper.LeerEntero(
+                                "Nueva cantidad: ");
 
-                        int cantidad = int.Parse(Console.ReadLine());
-
-                        inventarioService.ModificarCantidad(
-                            codigo,
-                            cantidad
-                        );
+                        inventarioService
+                            .ModificarCantidad(
+                                producto.Codigo,
+                                cantidad
+                            );
 
                         break;
 
                     case 3:
 
-                        Console.Write("Nuevo precio: ");
+                        decimal precio =
+                            InputHelper.LeerDecimal(
+                                "Nuevo precio: ");
 
-                        decimal precio = decimal.Parse(Console.ReadLine());
-
-                        inventarioService.ModificarPrecio(
-                            codigo,
-                            precio
-                        );
+                        inventarioService
+                            .ModificarPrecio(
+                                producto.Codigo,
+                                precio
+                            );
 
                         break;
+
+                    default:
+
+                        Console.WriteLine(
+                            "Opción inválida."
+                        );
+
+                        return;
                 }
 
-                historialService.RegistrarMovimiento(
-                    "MODIFICACION",
-                    producto,
-                    producto.Cantidad,
-                    producto.Cantidad,
-                    "Producto modificado."
-                );
+                historialService
+                    .RegistrarMovimiento(
+                        "MODIFICACION",
+                        producto,
+                        producto.Cantidad,
+                        producto.Cantidad,
+                        "Producto modificado."
+                    );
 
-                Console.WriteLine("Producto actualizado.");
+                Console.WriteLine(
+                    "Producto actualizado."
+                );
             }
             catch (Exception ex)
             {
@@ -259,36 +330,50 @@ namespace SistemaDeInventario.UI
         {
             try
             {
-                Console.Write("Código: ");
-                string codigo = Console.ReadLine();
-
-                Producto producto =
-                    inventarioService.BuscarProducto(codigo);
+                Producto? producto = BuscarProducto();
 
                 if (producto == null)
                 {
-                    Console.WriteLine("Producto no encontrado.");
                     return;
                 }
 
-                historialService.RegistrarMovimiento(
-                    "ELIMINACION",
-                    producto,
-                    producto.Cantidad,
-                    0,
+                string respuesta =
+                    InputHelper.LeerTexto(
+                        "¿Desea eliminar el producto? (S/N): "
+                    );
+
+                if (respuesta.ToUpper() != "S")
+                {
+                    Console.WriteLine(
+                        "Operación cancelada."
+                    );
+
+                    return;
+                }
+
+                historialService
+                    .RegistrarMovimiento(
+                        "ELIMINACION",
+                        producto,
+                        producto.Cantidad,
+                        0,
+                        "Producto eliminado."
+                    );
+
+                inventarioService
+                    .EliminarProducto(
+                        producto.Codigo
+                    );
+
+                Console.WriteLine(
                     "Producto eliminado."
                 );
-
-                inventarioService.EliminarProducto(codigo);
-
-                Console.WriteLine("Producto eliminado.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
         }
-
         private void MostrarProducto(Producto producto)
         {
             Console.WriteLine("--------------------------------");
@@ -304,10 +389,10 @@ namespace SistemaDeInventario.UI
             Console.WriteLine($"Total: {producto.Total}");
         }
 
-        private void BuscarProducto()
+        private Producto? BuscarProducto()
         {
-            Console.Write("Ingrese código o nombre del producto: ");
-            string textoBusqueda = Console.ReadLine();
+            string textoBusqueda =
+                InputHelper.LeerTexto("Ingrese código o nombre del producto: ");
 
             List<Producto> resultados =
                 inventarioService.BuscarProductos(textoBusqueda);
@@ -315,13 +400,13 @@ namespace SistemaDeInventario.UI
             if (resultados.Count == 0)
             {
                 Console.WriteLine("Producto no encontrado.");
-                return;
+                return null;
             }
 
             if (resultados.Count == 1)
             {
                 MostrarProducto(resultados[0]);
-                return;
+                return resultados[0];
             }
 
             Console.WriteLine("\nSe encontraron coincidencias en los productos:");
@@ -332,25 +417,25 @@ namespace SistemaDeInventario.UI
                 Console.WriteLine($"{i + 1}. {resultados[i].Nombre}");
             }
 
-            Console.Write("\nSeleccione el número del producto: ");
-            string opcionTexto = Console.ReadLine();
-
-            if (!int.TryParse(opcionTexto, out int opcion))
-            {
-                Console.WriteLine("Opción inválida. Debe ingresar un número.");
-                return;
-            }
+            int opcion =
+                InputHelper.LeerEntero("\nSeleccione el número del producto: ");
 
             if (opcion < 1 || opcion > resultados.Count)
             {
                 Console.WriteLine("Opción fuera de rango.");
-                return;
+                return null;
             }
 
             Producto productoSeleccionado = resultados[opcion - 1];
 
             MostrarProducto(productoSeleccionado);
+
+            return productoSeleccionado;
         }
+
+
+
+
 
 
         private void MenuInventario()
@@ -446,8 +531,10 @@ namespace SistemaDeInventario.UI
                 Console.WriteLine($"Cantidad: {producto.Cantidad}");
                 Console.WriteLine($"Precio: {producto.Precio}");
                 Console.WriteLine($"Total: {producto.Total}");
+                Console.WriteLine("\n--------------------------------");
             }
         }
+
 
         private void MostrarProductosConBajoStock()
         {
@@ -495,7 +582,28 @@ namespace SistemaDeInventario.UI
                 Console.WriteLine($"Precio: {producto.Precio}");
 
                 Console.WriteLine($"Total: {producto.Total}");
+                Console.WriteLine("--------------------------------");
             }
+
+            MostrarResumenInventario(productos);
+        }
+
+        private void MostrarResumenInventario(List<Producto> productos)
+
+        {
+
+            decimal valorTotalInventario =
+
+                productos.Sum(p => p.Total);
+
+
+
+            Console.WriteLine("\nRESUMEN DEL INVENTARIO");
+
+            Console.WriteLine($"Productos registrados : {productos.Count}");
+
+            Console.WriteLine($"Valor total del inventario : S/. {valorTotalInventario:N2}");
+
         }
     }
 }

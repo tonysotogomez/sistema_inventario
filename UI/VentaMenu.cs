@@ -92,16 +92,46 @@ namespace SistemaDeInventario.UI
         {
             try
             {
-                Console.Write("Código: ");
-                string codigo = Console.ReadLine();
+                string textoBusqueda =
+                    InputHelper.LeerTexto("Ingrese el código o nombre del producto: ");
 
-                Producto producto =
-                    inventarioService.BuscarProducto(codigo);
+                List<Producto> productos =
+                    inventarioService.BuscarProductos(textoBusqueda);
 
-                if (producto == null)
+                if (productos.Count == 0)
                 {
                     Console.WriteLine("Producto no encontrado.");
                     return;
+                }
+
+                Producto producto;
+
+                if (productos.Count == 1)
+                {
+                    producto = productos[0];
+                }
+                else
+                {
+                    Console.WriteLine("\nSe encontraron coincidencias:");
+                    Console.WriteLine("--------------------------------");
+
+                    for (int i = 0; i < productos.Count; i++)
+                    {
+                        Console.WriteLine(
+                            $"{i + 1}. {productos[i].Codigo} - {productos[i].Nombre}"
+                        );
+                    }
+
+                    int opcion =
+                        InputHelper.LeerEntero("Seleccione un producto: ");
+
+                    if (opcion < 1 || opcion > productos.Count)
+                    {
+                        Console.WriteLine("Opción fuera de rango.");
+                        return;
+                    }
+
+                    producto = productos[opcion - 1];
                 }
 
                 Console.WriteLine($"Producto: {producto.Nombre}");
@@ -109,8 +139,8 @@ namespace SistemaDeInventario.UI
 
                 int cantidadAnterior = producto.Cantidad;
 
-                Console.Write("Cantidad vendida: ");
-                int cantidad = int.Parse(Console.ReadLine());
+                int cantidad =
+                    InputHelper.LeerEntero("Cantidad vendida: ");
 
                 ventaService.RegistrarVenta(producto, cantidad);
 
@@ -208,13 +238,46 @@ namespace SistemaDeInventario.UI
 
         private void MostrarVentasPorProductoYFecha()
         {
-            Console.Write("Ingrese el código del producto: ");
-            string codigo = Console.ReadLine();
+            string textoBusqueda =
+                InputHelper.LeerTexto("Ingrese código o nombre del producto: ");
 
-            if (string.IsNullOrWhiteSpace(codigo))
+            List<Producto> resultados =
+                inventarioService.BuscarProductos(textoBusqueda);
+
+            if (resultados.Count == 0)
             {
-                Console.WriteLine("Debe ingresar un código.");
+                Console.WriteLine("Producto no encontrado.");
                 return;
+            }
+
+            Producto producto;
+
+            if (resultados.Count == 1)
+            {
+                producto = resultados[0];
+            }
+            else
+            {
+                Console.WriteLine("\nSe encontraron coincidencias en los productos:");
+                Console.WriteLine("-------------------------------------------------");
+
+                for (int i = 0; i < resultados.Count; i++)
+                {
+                    Console.WriteLine(
+                        $"{i + 1}. {resultados[i].Codigo} - {resultados[i].Nombre}"
+                    );
+                }
+
+                int opcion =
+                    InputHelper.LeerEntero("\nSeleccione el número del producto: ");
+
+                if (opcion < 1 || opcion > resultados.Count)
+                {
+                    Console.WriteLine("Opción fuera de rango.");
+                    return;
+                }
+
+                producto = resultados[opcion - 1];
             }
 
             Console.Write("Ingrese la fecha (dd/mm/yyyy): ");
@@ -228,7 +291,7 @@ namespace SistemaDeInventario.UI
 
             List<Venta> ventas =
                 ventaService.ObtenerVentasPorProductoYFecha(
-                    codigo,
+                    producto.Codigo,
                     fecha
                 );
 
@@ -246,16 +309,47 @@ namespace SistemaDeInventario.UI
 
         private void MostrarVentasPorProducto()
         {
-            Console.Write("Ingrese código o nombre del producto: ");
-            string textoBusqueda = Console.ReadLine();
+            string textoBusqueda =
+                InputHelper.LeerTexto("Ingrese código o nombre del producto: ");
 
-            if (string.IsNullOrWhiteSpace(textoBusqueda))
+            List<Producto> resultados =
+                inventarioService.BuscarProductos(textoBusqueda);
+
+            if (resultados.Count == 0)
             {
-                Console.WriteLine("Debe ingresar un código o nombre del producto.");
+                Console.WriteLine("Producto no encontrado.");
                 return;
             }
 
-            textoBusqueda = textoBusqueda.Trim();
+            Producto producto;
+
+            if (resultados.Count == 1)
+            {
+                producto = resultados[0];
+            }
+            else
+            {
+                Console.WriteLine("\nSe encontraron coincidencias en los productos:");
+                Console.WriteLine("-------------------------------------------------");
+
+                for (int i = 0; i < resultados.Count; i++)
+                {
+                    Console.WriteLine(
+                        $"{i + 1}. {resultados[i].Codigo} - {resultados[i].Nombre}"
+                    );
+                }
+
+                int seleccion =
+                    InputHelper.LeerEntero("\nSeleccione el número del producto: ");
+
+                if (seleccion < 1 || seleccion > resultados.Count)
+                {
+                    Console.WriteLine("Opción fuera de rango.");
+                    return;
+                }
+
+                producto = resultados[seleccion - 1];
+            }
 
             int opcion;
 
@@ -265,15 +359,18 @@ namespace SistemaDeInventario.UI
                 Console.WriteLine("1. Ver últimas 5 ventas del producto");
                 Console.WriteLine("2. Buscar ventas del producto por fecha");
                 Console.WriteLine("3. Volver");
-                Console.Write("Seleccione una opción: ");
 
-                int.TryParse(Console.ReadLine(), out opcion);
+                opcion =
+                    InputHelper.LeerEntero("Seleccione una opción: ");
 
                 switch (opcion)
                 {
                     case 1:
+
                         List<Venta> ultimasVentas =
-                            ventaService.ObtenerUltimas5VentasPorProducto(textoBusqueda);
+                            ventaService.ObtenerUltimas5VentasPorProducto(
+                                producto.Codigo
+                            );
 
                         if (ultimasVentas.Count == 0)
                         {
@@ -286,6 +383,7 @@ namespace SistemaDeInventario.UI
                         break;
 
                     case 2:
+
                         Console.Write("Ingrese la fecha (dd/mm/yyyy): ");
                         string fechaTexto = Console.ReadLine();
 
@@ -296,7 +394,10 @@ namespace SistemaDeInventario.UI
                         }
 
                         List<Venta> ventasPorFecha =
-                            ventaService.ObtenerVentasPorProductoYFecha(textoBusqueda, fecha);
+                            ventaService.ObtenerVentasPorProductoYFecha(
+                                producto.Codigo,
+                                fecha
+                            );
 
                         if (ventasPorFecha.Count == 0)
                         {
@@ -304,7 +405,10 @@ namespace SistemaDeInventario.UI
                             break;
                         }
 
-                        Console.WriteLine($"\nVENTAS DEL PRODUCTO EN LA FECHA {fecha:dd/MM/yyyy}:");
+                        Console.WriteLine(
+                            $"\nVENTAS DEL PRODUCTO EN LA FECHA {fecha:dd/MM/yyyy}:"
+                        );
+
                         MostrarVentas(ventasPorFecha);
                         break;
 
@@ -319,7 +423,6 @@ namespace SistemaDeInventario.UI
 
             } while (opcion != 3);
         }
-
     }
 
 }
