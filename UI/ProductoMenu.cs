@@ -62,7 +62,10 @@ namespace SistemaDeInventario.UI
                         break;
 
                     case 4:
-                        EliminarProducto();
+                        do
+                        {
+                            EliminarProducto();
+                        } while (menuHelper.Continuar("¿Desea eliminar otro producto?"));
                         break;
 
                     case 5:
